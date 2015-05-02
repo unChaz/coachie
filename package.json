@@ -1,0 +1,15 @@
+{
+  "name": "chaz-test",
+  "version": "0.0.0",
+  "description": "esports training",
+  "main": "chaz.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Chaz Ferguson",
+  "license": "MIT",
+  "dependencies": {
+    "maki": "git://github.com/martindale/maki",
+    "maki-passport-local": "0.0.2"
+  }
+}
