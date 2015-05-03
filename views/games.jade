@@ -5,8 +5,4 @@ block content
     .five.column.row
       each game in games
         .column
-          a.ui.card(href="/games/#{game.slug}")
-            .image
-              img(src="/files/#{game.image}")
-            .content
-              a.header #{game.name}
+          include partials/game-card

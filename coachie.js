@@ -29,9 +29,13 @@ var Relationship = coachie.define('Relationship', {
 var Person = coachie.define('Person', {
   attributes: {
     username: { type: String , slug: true, max: 32, required: true },
-    password: { type: String , masked: true, required: true },
+    password: { type: String , masked: true },
     email: { type: String, max: 64, required: true },
-    relationships: [ { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Relationship', render: { create: false } } ],
+    relationships: [ {
+      type: coachie.mongoose.SchemaTypes.ObjectId,
+      ref: 'Relationship',
+      render: { create: false }
+    } ],
     team: { type: String, max: 64 },
     coach: { type: Boolean, default: false, render: { create: false } },
     featured: { type: Boolean, default: false, render: { create: false } },

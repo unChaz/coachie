@@ -6,20 +6,20 @@ block content
       .four.wide.column
         .ui.card
           .image
-            if user.image
-              img(src="/files/#{user.image}")
+            if person.image
+              img(src="/files/#{person.image}")
             else
               img(src="/img/default.jpg")
           .content
-            a.header #{user.username}
+            a.header #{person.username}
             .meta
-              if user.coach
+              if person.coach
                 a Coach
               else
                 a Player
-              if user.team
-                a #{user.team}
-            .description #{user.bio}
+              if person.team
+                a #{person.team}
+            .description #{person.bio}
             .ui.huge.star.rating(data-rating="#{user.rating}", data-max-rating="5")
             
       .twelve.wide.column
