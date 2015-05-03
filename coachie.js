@@ -22,17 +22,31 @@ chaz.define('Review', {
   attributes: {
     rating: { type: Number, min: 1, max: 5 },
     comment: { type: String, max: 240 },
-    _player: { type: chaz.mongoose.SchemaTypes.ObjectId , ref: 'User' }, 
-    _coach: { type: chaz.mongoose.SchemaTypes.ObjectId, ref: 'User' }
+    _player: {
+      type: chaz.mongoose.SchemaTypes.ObjectId,
+      ref: 'User',
+      populate: [{
+        method: 'get',
+        fields: 'username'
+      }]
+    }, 
+    _coach: {
+      type: chaz.mongoose.SchemaTypes.ObjectId,
+      ref: 'User',
+      populate: [{
+        method: 'get',
+        fields: 'username'
+      }]
+    }
   },
-  icon: 'book'
+  icon: 'comments'
 });
 
 var Game = chaz.define('Game', {
   attributes: {
     name: { type: String }
   },
-  icon: 'twitch'
+  icon: 'game'
 });
 
 var Slot = chaz.define('Slot', {
@@ -61,18 +75,7 @@ var Booking = chaz.define('Booking', {
     _slot: { type: chaz.mongoose.SchemaTypes.ObjectId , ref: 'Slot' },
     _user: { type: chaz.mongoose.SchemaTypes.ObjectId , ref: 'User' }
   },
-  icon: 'event'
+  icon: 'book'
 });
 
-chaz.start(function(err) {
-  console.log('app started', err );
-  chaz.app.post('/slots', function(req, res, next) {
-    var slot = req.body;
-    console.log('slot', slot);
-    slot._creator = req.user._id;
-    console.log('slot now:', slot);
-    Slot.create( slot , function(err, slot) {
-      res.status(303).redirect('/slots/' + slot._id);
-    });
-  });
-});
+chaz.start();
