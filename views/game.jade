@@ -22,14 +22,9 @@ block content
               th Games
               th Rating
           tbody
-            tr
-              td unchaz
-              td UberNewbs
-              td Lorum Ipsum
-              td 3.45
-            tr
-              td unchaz
-              td UberNewbs
-              td Lorum Ipsum
-              td 3.45
-  
+            each user in users
+              tr
+                td #{user.username}
+                td #{user.team}
+                td #{user.games}
+                td #{user.rating}

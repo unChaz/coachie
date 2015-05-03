@@ -1,22 +1,22 @@
 var config = require('./config');
 var Maki = require('maki');
 
-var chaz = new Maki( config );
+var coachie = new Maki( config );
 
 var Passport = require('maki-passport-local');
 var passport = new Passport({
   resource: 'User'
 });
 
-chaz.use( passport );
+coachie.use( passport );
 
-var GameParticipation = new chaz.mongoose.Schema({
-  _user: { type: chaz.mongoose.SchemaTypes.ObjectId , ref: 'User', required: true },
-  _game: { type: chaz.mongoose.SchemaTypes.ObjectId , ref: 'Game', required: true },
+var GameParticipation = new coachie.mongoose.Schema({
+  _user: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'User', required: true },
+  _game: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Game', required: true },
   role: {type:[{ type: String , enum: ['player', 'coach'] }], required: true }
 });
 
-chaz.define('User', {
+coachie.define('User', {
   attributes: {
     username: { type: String , slug: true, max: 32 },
     password: { type: String , masked: true },
@@ -31,12 +31,12 @@ chaz.define('User', {
   icon: 'user'
 });
 
-chaz.define('Review', {
+coachie.define('Review', {
   attributes: {
     rating: { type: Number, min: 1, max: 5 },
     comment: { type: String, max: 240 },
     _player: {
-      type: chaz.mongoose.SchemaTypes.ObjectId,
+      type: coachie.mongoose.SchemaTypes.ObjectId,
       ref: 'User',
       populate: [{
         method: 'get',
@@ -44,7 +44,7 @@ chaz.define('Review', {
       }]
     }, 
     _coach: {
-      type: chaz.mongoose.SchemaTypes.ObjectId,
+      type: coachie.mongoose.SchemaTypes.ObjectId,
       ref: 'User',
       populate: [{
         method: 'get',
@@ -55,23 +55,30 @@ chaz.define('Review', {
   icon: 'comments'
 });
 
-var Game = chaz.define('Game', {
+var Game = coachie.define('Game', {
   attributes: {
     shortname: { type: String, index: true },
     name: { type: String },
     image: { type: 'File' }
   },
+  requirements: {
+    'User': {
+      filter: function() {
+        return { 'games._game': this._id };
+      }
+    }
+  },
   icon: 'game'
 });
 
-var Slot = chaz.define('Slot', {
+var Slot = coachie.define('Slot', {
   attributes: {
     title: { type: String , max: 100 },
     startTime: { type: Date , required: true },
     endTime: { type: Date , required: true },
     rate: { type: Number },
-    _creator: { type: chaz.mongoose.SchemaTypes.ObjectId , ref: 'User' },
-    _booking: { type: chaz.mongoose.SchemaTypes.ObjectId , ref: 'Booking' }
+    _creator: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'User' },
+    _booking: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Booking' }
   },
   icon: 'calendar'
 });
@@ -85,22 +92,22 @@ Slot.pre('create', function(next, done) {
   return next( null , slot );
 });
 
-var Booking = chaz.define('Booking', {
+var Booking = coachie.define('Booking', {
   attributes: {
-    _slot: { type: chaz.mongoose.SchemaTypes.ObjectId , ref: 'Slot' },
-    _user: { type: chaz.mongoose.SchemaTypes.ObjectId , ref: 'User' },
+    _slot: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Slot' },
+    _user: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'User' },
     price: { type: Number },
     status: { type: String, enum: ['unpaid','cancelled', 'paid', 'refunded', 'complete']}
   },
   icon: 'book'
 });
 
-chaz.start(function(err) {
-  chaz.app.get('/about', function(req, res, next) {
+coachie.start(function(err) {
+  coachie.app.get('/about', function(req, res, next) {
     res.render('about');
   });
 
-  chaz.app.post('/slots', function(req, res, next) {
+  coachie.app.post('/slots', function(req, res, next) {
     var slot = req.body;
     slot._creator = req.user._id;
     Slot.create( slot , function(err, slot) {
