@@ -24,8 +24,8 @@ block content
             
       .twelve.wide.column
         h2 Games
-        .ui.three.column.grid
-          each relationship in relationships
+        .ui.five.column.grid
+          each relationship in relationships.slice(0, 10)
             .column
               a.ui.card(href="/games/#{relationship._game.slug}")
                 .image
@@ -66,7 +66,7 @@ block content
                 td #{slot.rate}
                 td
                   form(action="/bookings", method="post")
-                    input(type="hidden", name="_player", value="#{slot._id}")
+                    input(type="hidden", name="_player", value="#{user._id}")
                     input(type="hidden", name="_slot", value="#{slot._id}")
                     button.ui.submit.button(type="submit") book &raquo;
         

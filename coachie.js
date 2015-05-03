@@ -22,7 +22,18 @@ var Relationship = coachie.define('Relationship', {
       ref: 'Game',
       required: true
     },
-    role: [{ type: String , enum: ['player', 'coach'], required: true }]
+    role: { type: String , enum: ['player', 'coach'], required: true }
+  },
+  handlers: {
+    html: {
+      create: function(req, res) {
+        var relationship = this;
+        Person.get({ _id: relationship._user }, function(err, person) {
+          req.flash('info', 'game added successfully!');
+          res.status( 303 ).redirect('/people/' + person.slug );
+        });
+      }
+    }
   }
 });
 
@@ -53,7 +64,7 @@ var Person = coachie.define('Person', {
     'Slot': {
       filter: function() {
         var user = this;
-        return { _creator: user._id };
+        return { _creator: user._id , slot: null };
       },
       populate: '_game'
     },
@@ -136,12 +147,46 @@ Slot.pre('create', function(next, done) {
 
 var Booking = coachie.define('Booking', {
   attributes: {
-    _slot: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Slot' },
-    _player: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Person' },
+    _slot: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Slot', required: true },
+    _player: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Person', required: true },
     price: { type: Number },
-    status: { type: String, enum: ['unpaid','cancelled', 'paid', 'refunded', 'complete']}
+    status: { type: String, enum: ['unpaid','cancelled', 'paid', 'refunded', 'complete'], default: 'unpaid', required: true }
+  },
+  handlers: {
+    html: {
+      create: function(req, res) {
+        var booking = this;
+        console.log('boooking', booking);
+        Person.get({ _id: booking._player }, function(err, person) {
+          console.log(err || person );
+          
+          req.flash('info', 'booking created successfully!');
+          res.status( 303 ).redirect('/people/' + person.slug );
+        });
+      }
+    }
   },
   icon: 'book'
+});
+
+Booking.pre('create', function(next, done) {
+  var booking = this;
+  Slot.get({ _id: booking._slot , _booking: { $exists: true } }, function(err, slot) {
+    console.log(err || slot);
+    if (slot) return done('Slot already booked.');
+    return next();
+  });
+});
+
+Booking.post('create', function(next) {
+  var booking = this;
+  Slot.patch({ _id: booking._slot , _booking: { $exists: true } }, [
+    { op: 'add', path: '/' , value: booking._id }
+  ], function(err, slot) {
+    console.log(err || slot);
+    if (err) return next('Could not book slot.');
+    return next();
+  });
 });
 
 coachie.start(function(err) {
