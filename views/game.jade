@@ -9,17 +9,11 @@ block content
           img.ui.fluid.segment(src="/files/#{game.image}")
       .column
         h1 Coaches
-        .ui.category.search
-          .ui.icon.input
-            input.prompt(type="text", placeholder="Search coaches...")
-            i.search.icon
-          .results
         table.ui.four.column.table
           thead
             tr
               th User
               th Team
-              th Games
               th Rating
           tbody
             each relationship in relationships
@@ -27,5 +21,5 @@ block content
                 td
                   a(href="/users/#{relationship._user.slug}") #{relationship._user.username}
                 td #{relationship._user.team}
-                td #{relationship._user.relationships}
-                td #{relationship._user.rating}
+                td 
+                  .ui.huge.star.rating(data-rating="#{relationship._user.rating}", data-max-rating="5")

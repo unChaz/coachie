@@ -1,7 +1,7 @@
 module.exports = {
   service: {
-    name: 'coachie',
-    mission: 'Get Coached!',
+    name: 'Coachster',
+    mission: 'eSport Coach Matchmaking Made Easy',
     description: 'eSports Coach Matchmaking.',
     points: [
       { header: 'Find a coach',
