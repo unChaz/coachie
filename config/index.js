@@ -1,8 +1,8 @@
 module.exports = {
   service: {
     name: 'coachie',
-    mission: 'get coached in esports',
-    description: 'awesome esports are awesome and you\'re not.  get better.  coachi.',
+    mission: 'Get Coached!',
+    description: 'eSports Coach Matchmaking.',
     points: [
       { header: 'Find a coach',
         description: 'Find someone coaching your game right now.',
@@ -10,13 +10,13 @@ module.exports = {
           text: 'browse games',
           link: '/games'
         }
-
       },
       { header: 'Get Started',
         description: 'Sign up to coach or be coached',
         action: {
           text: 'Sign up',
-          link: '/users'
+          link: '/users',
+          color: 'blue'
         }
       },
       {

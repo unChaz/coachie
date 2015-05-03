@@ -1,7 +1,35 @@
-extends ../node_modules/maki/views/layouts/default
+extends layouts/default
 
 block content
-  .column
-    .ui.segment
-      h1 #{game.name}
-      img.ui.fluid.segment(src="/img/#{game.image}")
+  .ui.padded.grid
+    .two.column.row
+      .column
+        h1 #{game.name}
+        if game.image
+          img.ui.fluid.segment(src="/files/#{game.image}")
+      .column
+        h1 Coaches
+        .ui.category.search
+          .ui.icon.input
+            input.prompt(type="text", placeholder="Search coaches...")
+            i.search.icon
+          .results
+        table.ui.four.column.table
+          thead
+            tr
+              th User
+              th Team
+              th Games
+              th Rating
+          tbody
+            tr
+              td unchaz
+              td UberNewbs
+              td Lorum Ipsum
+              td 3.45
+            tr
+              td unchaz
+              td UberNewbs
+              td Lorum Ipsum
+              td 3.45
+  

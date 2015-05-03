@@ -10,14 +10,23 @@ var passport = new Passport({
 
 chaz.use( passport );
 
+var GameParticipation = new chaz.mongoose.Schema({
+  _user: { type: chaz.mongoose.SchemaTypes.ObjectId , ref: 'User', required: true },
+  _game: { type: chaz.mongoose.SchemaTypes.ObjectId , ref: 'Game', required: true },
+  role: {type:[{ type: String , enum: ['player', 'coach'] }], required: true }
+});
+
 chaz.define('User', {
   attributes: {
     username: { type: String , slug: true, max: 32 },
     password: { type: String , masked: true },
-    email: { type: String, max: 64 },
-    _games: { type: [chaz.mongoose.SchemaTypes.ObjectId]},
-    coach: { type: Boolean, default: false },
-    bio: { type: String, max: 240 }
+    email: { type: String, max: 64, required: true },
+    games: [GameParticipation],
+    team: { type: String },
+    coach: { type: Boolean, default: false, render: { create: false } },
+    featured: { type: Boolean, default: false, render: { create: false } },
+    bio: { type: String, max: 500 },
+    image: { type: 'File' }
   },
   icon: 'user'
 });
@@ -29,16 +38,17 @@ chaz.define('Review', {
     _player: { type: chaz.mongoose.SchemaTypes.ObjectId , ref: 'User' },
     _coach: { type: chaz.mongoose.SchemaTypes.ObjectId, ref: 'User' }
   },
-  icon: 'book'
+  icon: 'book',
+  internal: true
 });
 
 var Game = chaz.define('Game', {
   attributes: {
     shortname: { type: String, index: true },
     name: { type: String },
-    image: { type: String } //image URL
+    image: { type: 'File' }
   },
-  icon: 'twitch'
+  icon: 'trophy'
 });
 
 var Slot = chaz.define('Slot', {
@@ -73,14 +83,16 @@ var Booking = chaz.define('Booking', {
 });
 
 chaz.start(function(err) {
-  console.log('app started', err );
+  chaz.app.get('/about', function(req, res, next) {
+    res.render('about');
+  });
+
   chaz.app.post('/slots', function(req, res, next) {
     var slot = req.body;
-    console.log('slot', slot);
     slot._creator = req.user._id;
-    console.log('slot now:', slot);
     Slot.create( slot , function(err, slot) {
       res.status(303).redirect('/slots/' + slot._id);
     });
   });
+
 });

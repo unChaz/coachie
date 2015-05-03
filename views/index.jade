@@ -1,0 +1,21 @@
+extends layouts/default
+
+block content
+  .ui.header
+    h1.huge Hello, #{config.service.name}.
+      a.ui.label(href="https://github.com/martindale/maki/tree/master")
+    h2 !{ markdown( config.service.mission ) }
+    
+    p !{ markdown( config.service.description ) }
+    
+  .ui.stackable.three.column.grid
+    for point in config.service.points
+      .column
+        .ui.fluid.card
+          .content
+            h2.header #{ point.header }
+            //- TODO: use marked config, not a regex, to fix errant <p> tags
+            p.description
+              | !{ markdown( point.description ).replace(/<p>(.*)<\/p>/, '$1') }
+          if (point.action)
+            a.ui.bottom.attached.button.blue(href="#{point.action.link}") !{point.action.text}
