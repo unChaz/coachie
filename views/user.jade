@@ -1,5 +1,28 @@
 extends ../node_modules/maki/views/layouts/default
 
 block content
-  h1 #{user.username}
-  h2 some user. lol.
+  .ui.padded.grid
+    .two.column.row
+      .column
+        .ui.card
+          .image
+            img(src="/img/default.jpg")
+          .content
+            a.header #{user.username}
+            .meta
+              if user.coach
+                a Coach
+              else
+                a Player
+            .description #{user.bio}
+      .column
+        h1 Playing
+        .ui.five.column.grid
+          each game in user._games
+            .column
+              .ui.segment
+                p #{game.name}
+                img.ui.fluid.segment(src="/img/#{game.image}")
+    .column
+      if user.coach    
+        h1 Availability

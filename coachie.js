@@ -14,8 +14,8 @@ chaz.define('User', {
   attributes: {
     username: { type: String , slug: true, max: 32 },
     password: { type: String , masked: true },
-    email: { type: String },
-    games: { type: [chaz.mongoose.SchemaTypes.ObjectId]},
+    email: { type: String, max: 64 },
+    _games: { type: [chaz.mongoose.SchemaTypes.ObjectId]},
     coach: { type: Boolean, default: false },
     bio: { type: String, max: 240 }
   },
