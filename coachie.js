@@ -13,7 +13,7 @@ chaz.use( passport );
 var GameParticipation = new chaz.mongoose.Schema({
   _user: { type: chaz.mongoose.SchemaTypes.ObjectId , ref: 'User', required: true },
   _game: { type: chaz.mongoose.SchemaTypes.ObjectId , ref: 'Game', required: true },
-  role: [{ type: String , enum: ['player', 'coach'] }]
+  role: {type:[{ type: String , enum: ['player', 'coach'] }], required: true }
 });
 
 chaz.define('User', {
