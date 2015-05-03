@@ -133,7 +133,7 @@ Slot.pre('create', function(next, done) {
 var Booking = coachie.define('Booking', {
   attributes: {
     _slot: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Slot' },
-    _user: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Person' },
+    _player: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Person' },
     price: { type: Number },
     status: { type: String, enum: ['unpaid','cancelled', 'paid', 'refunded', 'complete']}
   },

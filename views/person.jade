@@ -66,6 +66,7 @@ block content
                 td #{slot.rate}
                 td
                   form(action="/bookings", method="post")
+                    input(type="hidden", name="_slot", value="#{slot._id}")
                     button.ui.submit.button(type="submit") book &raquo;
         
         if (user._id.toString() === person._id.toString())
