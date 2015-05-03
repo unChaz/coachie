@@ -1,4 +1,4 @@
-extends ../node_modules/maki/views/layouts/default
+extends layouts/default
 
 block content
   .ui.padded.grid
@@ -6,7 +6,10 @@ block content
       .column
         .ui.card
           .image
-            img(src="/img/default.jpg")
+            if user.image
+              img(src="/files/#{user.image}")
+            else
+              img(src="/img/default.jpg")
           .content
             a.header #{user.username}
             .meta
@@ -14,15 +17,25 @@ block content
                 a Coach
               else
                 a Player
+              if user.team
+                a #{user.team}
             .description #{user.bio}
+            .ui.huge.star.rating(data-rating="3", data-max-rating="5")
+            
       .column
         h1 Playing
-        .ui.five.column.grid
-          each game in user._games
-            .column
-              .ui.segment
-                p #{game.name}
-                img.ui.fluid.segment(src="/img/#{game.image}")
-    .column
-      if user.coach    
-        h1 Availability
+        if user.games.length === 0
+          p #{user.username} has not set up their games yet.
+        else
+          .ui.five.column.grid
+            each game in user._games
+              .column
+                .ui.segment
+                  p #{game.name}
+                  img.ui.fluid.segment(src="/img/#{game.image}")
+    if user.coach    
+      .two.column.row
+        .column
+          h1 Reviews
+        .column
+          h1 Availability

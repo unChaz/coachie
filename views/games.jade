@@ -1,0 +1,12 @@
+extends layouts/default
+
+block content
+  .ui.padded.grid
+    .five.column.row
+      each game in games
+        .column
+          .ui.card(onclick="window.location='/games/#{game._id}'", style='cursor:pointer')
+            .image
+              img(src="/files/#{game.image}")
+            .content
+              a.header #{game.name}
