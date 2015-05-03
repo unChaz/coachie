@@ -9,6 +9,7 @@
   "author": "Chaz Ferguson",
   "license": "MIT",
   "dependencies": {
+    "fast-json-patch": "^0.5.2",
     "maki": "git://github.com/martindale/maki",
     "maki-passport-local": "0.0.2"
   }
