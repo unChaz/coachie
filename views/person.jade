@@ -2,8 +2,8 @@ extends layouts/default
 
 block content
   .ui.padded.grid
-    .two.column.row
-      .column
+    .row
+      .four.wide.column
         .ui.card
           .image
             if user.image
@@ -22,7 +22,7 @@ block content
             .description #{user.bio}
             .ui.huge.star.rating(data-rating="#{user.rating}", data-max-rating="5")
             
-      .column
+      .twelve.wide.column
         h2 Games
         .ui.three.column.grid
           each relationship in relationships
@@ -66,6 +66,7 @@ block content
                 td #{slot.rate}
                 td
                   form(action="/bookings", method="post")
+                    input(type="hidden", name="_player", value="#{slot._id}")
                     input(type="hidden", name="_slot", value="#{slot._id}")
                     button.ui.submit.button(type="submit") book &raquo;
         
