@@ -1,8 +1,12 @@
+// config
 var config = require('./config');
+
+// Core
 var Maki = require('maki');
-
 var coachie = new Maki( config );
+var jsonpatch = require('fast-json-patch');
 
+// Plugins
 var Passport = require('maki-passport-local');
 var passport = new Passport({
   resource: 'User'
@@ -20,9 +24,9 @@ var Relationship = coachie.define('Relationship', {
     },
     role: [{ type: String , enum: ['player', 'coach'], required: true }]
   }
-})
+});
 
-coachie.define('User', {
+var User = coachie.define('User', {
   attributes: {
     username: { type: String , slug: true, max: 32 },
     password: { type: String , masked: true },
@@ -44,6 +48,14 @@ coachie.define('User', {
     }
   },
   icon: 'user'
+});
+
+Relationship.on('create', function(relationship) {
+  User.patch({ _id: relationship._user }, [
+    { op: 'add', path: '/relationships/0' , value: relationship._id }
+  ], function(err, num) {
+    // all done!
+  });
 });
 
 coachie.define('Review', {
