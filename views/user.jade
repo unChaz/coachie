@@ -24,16 +24,16 @@ block content
             
       .column
         h1 Playing
-        if user.games.length === 0
-          p #{user.username} has not set up their games yet.
-        else
-          .ui.five.column.grid
-            each game in user._games
-              .column
-                .ui.segment
-                  p #{game.name}
-                  img.ui.fluid.segment(src="/img/#{game.image}")
-    if user.coach    
+        .ui.five.column.grid
+          each relationship in relationships
+            .column
+              .ui.segment
+                h2
+                  a(href="/games/#{relationship._game.slug}") #{relationship._game.name}
+                if (relationship._game.image)
+                  img.ui.fluid.segment(src="/img/#{relationship._game.image}")
+
+    if user.coach
       .two.column.row
         .column
           h1 Reviews

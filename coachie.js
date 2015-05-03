@@ -10,23 +10,38 @@ var passport = new Passport({
 
 coachie.use( passport );
 
-var GameParticipation = new coachie.mongoose.Schema({
-  _user: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'User', required: true },
-  _game: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Game', required: true },
-  role: {type:[{ type: String , enum: ['player', 'coach'] }], required: true }
-});
+var Relationship = coachie.define('Relationship', {
+  attributes: {
+    _user: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'User', required: true },
+    _game: {
+      type: coachie.mongoose.SchemaTypes.ObjectId,
+      ref: 'Game',
+      required: true
+    },
+    role: [{ type: String , enum: ['player', 'coach'], required: true }]
+  }
+})
 
 coachie.define('User', {
   attributes: {
     username: { type: String , slug: true, max: 32 },
     password: { type: String , masked: true },
     email: { type: String, max: 64, required: true },
-    games: [GameParticipation],
+    relationships: [ { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Relationship' } ],
     team: { type: String },
     coach: { type: Boolean, default: false, render: { create: false } },
     featured: { type: Boolean, default: false, render: { create: false } },
     bio: { type: String, max: 500 },
     image: { type: 'File' }
+  },
+  requires: {
+    'Relationship': {
+      filter: function() {
+        var user = this;
+        return { _id: { $in: user.relationships } };
+      },
+      populate: '_game'
+    }
   },
   icon: 'user'
 });
@@ -57,15 +72,15 @@ coachie.define('Review', {
 
 var Game = coachie.define('Game', {
   attributes: {
-    shortname: { type: String, index: true },
-    name: { type: String },
+    name: { type: String , slug: true },
     image: { type: 'File' }
   },
-  requirements: {
-    'User': {
+  requires: {
+    'Relationship': {
       filter: function() {
-        return { 'games._game': this._id };
-      }
+        return { '_game': this._id };
+      },
+      populate: '_user'
     }
   },
   icon: 'game'
