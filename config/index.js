@@ -27,7 +27,8 @@ module.exports = {
           link: '/sessions'
         }
       }
-    ]
+    ],
+    icon: 'game'
   },
   database: {
     name: 'coachie'
