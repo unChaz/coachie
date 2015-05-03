@@ -28,11 +28,11 @@ var Relationship = coachie.define('Relationship', {
 
 var User = coachie.define('User', {
   attributes: {
-    username: { type: String , slug: true, max: 32 },
-    password: { type: String , masked: true },
+    username: { type: String , slug: true, max: 32, required: true },
+    password: { type: String , masked: true, required: true },
     email: { type: String, max: 64, required: true },
-    relationships: [ { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Relationship' } ],
-    team: { type: String },
+    relationships: [ { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Relationship', render: { create: false } } ],
+    team: { type: String, max: 64 },
     coach: { type: Boolean, default: false, render: { create: false } },
     featured: { type: Boolean, default: false, render: { create: false } },
     bio: { type: String, max: 500 },
@@ -69,7 +69,7 @@ coachie.define('Review', {
         method: 'get',
         fields: 'username'
       }]
-    }, 
+    },
     _coach: {
       type: coachie.mongoose.SchemaTypes.ObjectId,
       ref: 'User',
