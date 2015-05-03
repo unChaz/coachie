@@ -33,6 +33,15 @@ block content
                 if (relationship._game.image)
                   img.ui.fluid.segment(src="/img/#{relationship._game.image}")
 
+        h1 Availability
+        if (user._id.toString() === person._id.toString())
+          form(action="/slot", method="post")
+            input(type="hidden", name="_user", value="#{user._id}")
+            input(type="text", name="title")
+            input(type="datetime-local", name="start")
+            input(type="datetime-local", name="end")
+            input(type="number", name="rate", value="#{user.rate || 5}")
+
     if user.coach
       .two.column.row
         .column

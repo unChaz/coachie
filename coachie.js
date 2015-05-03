@@ -9,14 +9,14 @@ var jsonpatch = require('fast-json-patch');
 // Plugins
 var Passport = require('maki-passport-local');
 var passport = new Passport({
-  resource: 'User'
+  resource: 'Person'
 });
 
 coachie.use( passport );
 
 var Relationship = coachie.define('Relationship', {
   attributes: {
-    _user: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'User', required: true },
+    _user: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Person', required: true },
     _game: {
       type: coachie.mongoose.SchemaTypes.ObjectId,
       ref: 'Game',
@@ -26,7 +26,7 @@ var Relationship = coachie.define('Relationship', {
   }
 });
 
-var User = coachie.define('User', {
+var Person = coachie.define('Person', {
   attributes: {
     username: { type: String , slug: true, max: 32 },
     password: { type: String , masked: true },
@@ -51,7 +51,7 @@ var User = coachie.define('User', {
 });
 
 Relationship.on('create', function(relationship) {
-  User.patch({ _id: relationship._user }, [
+  Person.patch({ _id: relationship._user }, [
     { op: 'add', path: '/relationships/0' , value: relationship._id }
   ], function(err, num) {
     // all done!
@@ -64,7 +64,7 @@ coachie.define('Review', {
     comment: { type: String, max: 240 },
     _player: {
       type: coachie.mongoose.SchemaTypes.ObjectId,
-      ref: 'User',
+      ref: 'Person',
       populate: [{
         method: 'get',
         fields: 'username'
@@ -72,7 +72,7 @@ coachie.define('Review', {
     }, 
     _coach: {
       type: coachie.mongoose.SchemaTypes.ObjectId,
-      ref: 'User',
+      ref: 'Person',
       populate: [{
         method: 'get',
         fields: 'username'
@@ -101,10 +101,10 @@ var Game = coachie.define('Game', {
 var Slot = coachie.define('Slot', {
   attributes: {
     title: { type: String , max: 100 },
-    startTime: { type: Date , required: true },
-    endTime: { type: Date , required: true },
+    start: { type: Date , required: true },
+    end: { type: Date , required: true },
     rate: { type: Number },
-    _creator: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'User' },
+    _creator: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Person' },
     _booking: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Booking' }
   },
   icon: 'calendar'
@@ -122,7 +122,7 @@ Slot.pre('create', function(next, done) {
 var Booking = coachie.define('Booking', {
   attributes: {
     _slot: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Slot' },
-    _user: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'User' },
+    _user: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Person' },
     price: { type: Number },
     status: { type: String, enum: ['unpaid','cancelled', 'paid', 'refunded', 'complete']}
   },

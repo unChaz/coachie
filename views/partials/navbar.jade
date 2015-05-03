@@ -7,10 +7,10 @@
           i.trophy.icon 
           | Games
         if (user)
-          a.blue.item(href="/users/#{user.slug}") 
+          a.blue.item(href="/people/#{user.slug}") 
             i.user.icon
             | #{user.username}
-          a.blue.item(href="/users/#{user.slug}")
+          a.blue.item(href="/people/#{user.slug}")
             i.settings.icon
             | Settings
           a.blue.item(href="/sessions/#{session.hash}?method=delete") 
