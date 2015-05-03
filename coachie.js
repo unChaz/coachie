@@ -1,6 +1,6 @@
 var config = require('./config');
-
 var Maki = require('maki');
+
 var chaz = new Maki( config );
 
 var Passport = require('maki-passport-local');
@@ -13,7 +13,11 @@ chaz.use( passport );
 chaz.define('User', {
   attributes: {
     username: { type: String , slug: true, max: 32 },
-    password: { type: String , masked: true }
+    password: { type: String , masked: true },
+    email: { type: String, max: 64 },
+    _games: { type: [chaz.mongoose.SchemaTypes.ObjectId]},
+    coach: { type: Boolean, default: false },
+    bio: { type: String, max: 240 }
   },
   icon: 'user'
 });
@@ -22,7 +26,7 @@ chaz.define('Review', {
   attributes: {
     rating: { type: Number, min: 1, max: 5 },
     comment: { type: String, max: 240 },
-    _player: { type: chaz.mongoose.SchemaTypes.ObjectId , ref: 'User' }, 
+    _player: { type: chaz.mongoose.SchemaTypes.ObjectId , ref: 'User' },
     _coach: { type: chaz.mongoose.SchemaTypes.ObjectId, ref: 'User' }
   },
   icon: 'book'
@@ -30,7 +34,9 @@ chaz.define('Review', {
 
 var Game = chaz.define('Game', {
   attributes: {
-    name: { type: String }
+    shortname: { type: String, index: true },
+    name: { type: String },
+    image: { type: String } //image URL
   },
   icon: 'twitch'
 });
@@ -59,7 +65,9 @@ Slot.pre('create', function(next, done) {
 var Booking = chaz.define('Booking', {
   attributes: {
     _slot: { type: chaz.mongoose.SchemaTypes.ObjectId , ref: 'Slot' },
-    _user: { type: chaz.mongoose.SchemaTypes.ObjectId , ref: 'User' }
+    _user: { type: chaz.mongoose.SchemaTypes.ObjectId , ref: 'User' },
+    price: { type: Number },
+    status: { type: String, enum: ['unpaid','cancelled', 'paid', 'refunded', 'complete']}
   },
   icon: 'event'
 });
