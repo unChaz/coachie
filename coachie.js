@@ -45,6 +45,16 @@ var Person = coachie.define('Person', {
         return { _id: { $in: user.relationships } };
       },
       populate: '_game'
+    },
+    'Slot': {
+      filter: function() {
+        var user = this;
+        return { _creator: user._id };
+      },
+      populate: '_game'
+    },
+    'Game': {
+      filter: {}
     }
   },
   icon: 'user'
@@ -105,7 +115,8 @@ var Slot = coachie.define('Slot', {
     end: { type: Date , required: true },
     rate: { type: Number },
     _creator: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Person' },
-    _booking: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Booking' }
+    _booking: { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Booking' },
+    _game:    { type: coachie.mongoose.SchemaTypes.ObjectId , ref: 'Game' },
   },
   icon: 'calendar'
 });
