@@ -5,7 +5,7 @@ block content
     .five.column.row
       each game in games
         .column
-          .ui.card(onclick="window.location='/games/#{game._id}'", style='cursor:pointer')
+          a.ui.card(href="/games/#{game.slug}")
             .image
               img(src="/files/#{game.image}")
             .content
