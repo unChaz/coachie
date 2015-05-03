@@ -64,7 +64,7 @@ var Person = coachie.define('Person', {
     'Slot': {
       filter: function() {
         var user = this;
-        return { _creator: user._id , slot: null };
+        return { _creator: user._id , _booking: null };
       },
       populate: '_game'
     },
@@ -156,11 +156,8 @@ var Booking = coachie.define('Booking', {
     html: {
       create: function(req, res) {
         var booking = this;
-        console.log('boooking', booking);
         Person.get({ _id: booking._player }, function(err, person) {
-          console.log(err || person );
-          
-          req.flash('info', 'booking created successfully!');
+          req.flash('info', 'Appointment successfully created!');
           res.status( 303 ).redirect('/people/' + person.slug );
         });
       }
@@ -173,20 +170,15 @@ Booking.pre('create', function(next, done) {
   var booking = this;
   Slot.get({ _id: booking._slot , _booking: { $exists: true } }, function(err, slot) {
     console.log(err || slot);
-    if (slot) return done('Slot already booked.');
+    if (slot) return done('That slot is already booked.  Try another?');
     return next();
   });
 });
 
-Booking.post('create', function(next) {
-  var booking = this;
-  Slot.patch({ _id: booking._slot , _booking: { $exists: true } }, [
-    { op: 'add', path: '/' , value: booking._id }
-  ], function(err, slot) {
-    console.log(err || slot);
-    if (err) return next('Could not book slot.');
-    return next();
-  });
+Booking.on('create', function(booking) {
+  Slot.patch({ _id: booking._slot }, [
+    { op: 'add', path: '/_booking' , value: booking._id }
+  ]);
 });
 
 coachie.start(function(err) {
