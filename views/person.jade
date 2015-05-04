@@ -20,7 +20,7 @@ block content
               if person.team
                 a #{person.team}
             .description #{person.bio}
-            .ui.huge.star.rating(data-rating="#{user.rating}", data-max-rating="5")
+            .ui.huge.star.rating(data-rating="#{person.rating}", data-max-rating="5")
             
       .twelve.wide.column
         h2 Games
@@ -88,7 +88,7 @@ block content
             .field
               button.ui.submit.button(type="submit") Add &raquo;
 
-    if user.coach
+    if person.coach
       .two.column.row
         .column
           h1 Reviews
