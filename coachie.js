@@ -169,7 +169,6 @@ var Booking = coachie.define('Booking', {
 Booking.pre('create', function(next, done) {
   var booking = this;
   Slot.get({ _id: booking._slot , _booking: { $exists: true } }, function(err, slot) {
-    console.log(err || slot);
     if (slot) return done('That slot is already booked.  Try another?');
     return next();
   });
