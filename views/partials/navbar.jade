@@ -3,11 +3,8 @@
     //- block for prepend/append/replace-able menu items
     block mainMenu
       .right.menu
-        a.blue.item(href="/games") 
-          i.game.icon 
-          | Games
         if (user)
-          a.blue.item(href="/users/#{user.slug}") 
+          a.blue.item(href="/people/#{user.slug}") 
             i.user.icon
             | #{user.username}
           a.blue.item(href="/sessions/#{session.hash}?method=delete") 
@@ -18,5 +15,13 @@
             i.user.icon
             | Login &raquo;
 
-  .ui.sub.menu
-    a.item.brand(href="/") #{config.service.name}
+  .ui.menu
+    a.item.brand(href="/")
+      i.game.icon
+      | #{config.service.name}
+    a.blue.item(href="/games") 
+      i.game.icon 
+      | Games
+    a.blue.item(href="/people") 
+      i.user.icon 
+      | People

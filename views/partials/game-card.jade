@@ -1,0 +1,7 @@
+.ui.card
+  .image
+    a(href="/games/#{game.slug}")
+      img(src="/files/#{game.image}")
+  .content
+    a.header(href="/games/#{game.slug}") #{game.name}
+    p.description #{game.description}
